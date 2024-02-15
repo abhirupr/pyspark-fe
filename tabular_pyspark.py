@@ -27,6 +27,9 @@ def row_wise_descriptive_statistic(pdf: pyspark.sql.dataframe.DataFrame, output_
 
     Returns:
         pyspark.sql.dataframe.DataFrame: The original DataFrame adding the output_var.
+
+    Raises:
+        Error: When the func is not any of the values: sum, avg, min, max
   """
   if func == 'sum':
     return pdf.withColumn(output_var, sum([F.col(x) for x in col_list]))
@@ -87,6 +90,9 @@ def rolling_aggregate(pdf: pyspark.sql.dataframe.DataFrame,var: str,n: int,func:
     Returns:
         pyspark.sql.dataframe.DataFrame: The original DataFrame adding the output aggregate column
 
+    Raises:
+        Error: When the func is not any of the values: avg, min, max, median, std
+
   """
   from pyspark.sql.window import Window
   w = Window().partitionBy(key_var).orderBy(time_var).rowsBetween(-n+1, 0)
@@ -119,6 +125,9 @@ def rolling_aggregate_pre(pdf: pyspark.sql.dataframe.DataFrame,var: str,n: int,f
 
     Returns:
         pyspark.sql.dataframe.DataFrame: The original DataFrame adding the output aggregate column
+
+    Raises:
+        Error: When the func is not any of the values: avg, min, max, median, std
 
   """
   from pyspark.sql.window import Window
@@ -153,6 +162,9 @@ def rolling_aggregate_dynm(pdf: pyspark.sql.dataframe.DataFrame,var: str,n: int,
 
     Returns:
         pyspark.sql.dataframe.DataFrame: The original DataFrame adding the output aggregate column
+
+    Raises:
+        Error: When the func is not any of the values: avg, min, max, median, std
 
   """
   from pyspark.sql.window import Window
