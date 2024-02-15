@@ -29,7 +29,7 @@ def row_wise_descriptive_statistic(pdf: pyspark.sql.dataframe.DataFrame, output_
         pyspark.sql.dataframe.DataFrame: The original DataFrame adding the output_var.
 
     Raises:
-        Error: When the func is not any of the values: sum, avg, min, max
+        ValueError: When the func is not any of the values: sum, avg, min, max
   """
   if func == 'sum':
     return pdf.withColumn(output_var, sum([F.col(x) for x in col_list]))
@@ -40,7 +40,7 @@ def row_wise_descriptive_statistic(pdf: pyspark.sql.dataframe.DataFrame, output_
   elif func == 'min':
     return pdf.withColumn(output_var, F.least(*col_list))
   else:
-    raise 'Error: Only takes func input: sum, avg, min, max'
+    raise ValueError("func only takes values sum, avg, min, max")
 
 def first_date_month(pdf: pyspark.sql.dataframe.DataFrame, date_var: str, output_date_var: str) -> pyspark.sql.dataframe.DataFrame:
   """
@@ -91,7 +91,7 @@ def rolling_aggregate(pdf: pyspark.sql.dataframe.DataFrame,var: str,n: int,func:
         pyspark.sql.dataframe.DataFrame: The original DataFrame adding the output aggregate column
 
     Raises:
-        Error: When the func is not any of the values: avg, min, max, median, std
+        ValueError: When the func is not any of the values: avg, min, max, median, std
 
   """
   from pyspark.sql.window import Window
@@ -107,7 +107,8 @@ def rolling_aggregate(pdf: pyspark.sql.dataframe.DataFrame,var: str,n: int,func:
   elif func == 'std':
     return pdf.withColumn(f'std_{var}_{n}', F.std(var).over(w))
   else:
-    raise 'Error: Only takes func input: avg, min, max, median, std'
+    raise ValueError("func only takes values: avg, min, max, median, std")
+
 
 def rolling_aggregate_pre(pdf: pyspark.sql.dataframe.DataFrame,var: str,n: int,func: str,key_var: str,time_var: str) -> pyspark.sql.dataframe.DataFrame:
 
@@ -127,7 +128,7 @@ def rolling_aggregate_pre(pdf: pyspark.sql.dataframe.DataFrame,var: str,n: int,f
         pyspark.sql.dataframe.DataFrame: The original DataFrame adding the output aggregate column
 
     Raises:
-        Error: When the func is not any of the values: avg, min, max, median, std
+        ValueError: When the func is not any of the values: avg, min, max, median, std
 
   """
   from pyspark.sql.window import Window
@@ -143,7 +144,7 @@ def rolling_aggregate_pre(pdf: pyspark.sql.dataframe.DataFrame,var: str,n: int,f
   elif func == 'std':
     return pdf.withColumn(f'std_{var}_{n}_pre', F.std(var).over(w))
   else:
-    raise 'Error: Only takes func input: avg, min, max, median, std'
+    raise ValueError("func only takes values: avg, min, max, median, std")
 
 def rolling_aggregate_dynm(pdf: pyspark.sql.dataframe.DataFrame,var: str,n: int, k=int,func: str,key_var: str,time_var: str) -> pyspark.sql.dataframe.DataFrame:
 
@@ -164,7 +165,7 @@ def rolling_aggregate_dynm(pdf: pyspark.sql.dataframe.DataFrame,var: str,n: int,
         pyspark.sql.dataframe.DataFrame: The original DataFrame adding the output aggregate column
 
     Raises:
-        Error: When the func is not any of the values: avg, min, max, median, std
+        ValueError: When the func is not any of the values: avg, min, max, median, std
 
   """
   from pyspark.sql.window import Window
@@ -180,7 +181,7 @@ def rolling_aggregate_dynm(pdf: pyspark.sql.dataframe.DataFrame,var: str,n: int,
   elif func == 'std':
     return pdf.withColumn(f'std_{var}_{n}_pre_{k}', F.std(var).over(w))
   else:
-    raise 'Error: Only takes func input: avg, min, max, median, std'
+    raise ValueError("func only takes values: avg, min, max, median, std")
 
 
 def trend_coeff(pdf: pyspark.sql.dataframe.DataFrame, var: str, n: int, key_var: str,time_var: str) -> pyspark.sql.dataframe.DataFrame:
