@@ -15,7 +15,7 @@ def clean_date(pdf: pyspark.sql.dataframe.DataFrame, date_col_list: list) -> pys
      pdf = pdf.withColumn(i, F.to_date(F.substring(F.col(i),1,10),'yyyy-MM-dd'))
   return pdf
 
-def row_wise_descriptive_statistic(pdf: pyspark.sql.dataframe.DataFrame, output_var: str, col_list: list, func: str) -> pyspark.sql.dataframe.DataFrame:
+def agg_cols(pdf: pyspark.sql.dataframe.DataFrame, output_var: str, col_list: list, func: str) -> pyspark.sql.dataframe.DataFrame:
   """
     Aggregate multiple columns at a row level 
 
