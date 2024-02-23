@@ -1,21 +1,6 @@
 import pyspark
 import pyspark.sql.functions as F 
 
-def clean_date(pdf: pyspark.sql.dataframe.DataFrame, date_col_list: list) -> pyspark.sql.dataframe.DataFrame:
-  """
-    Clean a date column in string format and convert into date format
-
-    Args:
-        pdf (pyspark.sql.dataframe.DataFrame): Input pyspark sql dataframe.
-        date_col_list (list): List of date columns
-
-    Returns:
-        pyspark.sql.dataframe.DataFrame: The original DataFrame transforming the date columns to from string to date format.
-  """
-  for i in date_col_list:
-     pdf = pdf.withColumn(i, F.to_date(F.substring(F.col(i),1,10),'yyyy-MM-dd'))
-  return pdf
-
 def agg_cols(pdf: pyspark.sql.dataframe.DataFrame, output_var: str, col_list: list, func: str) -> pyspark.sql.dataframe.DataFrame:
   """
     Aggregate multiple columns at a row level 
@@ -43,19 +28,6 @@ def agg_cols(pdf: pyspark.sql.dataframe.DataFrame, output_var: str, col_list: li
   else:
     raise ValueError("func only takes values sum, avg, min, max")
 
-def first_date_month(pdf: pyspark.sql.dataframe.DataFrame, date_var: str, output_date_var: str) -> pyspark.sql.dataframe.DataFrame:
-  """
-    Get the starting month date of the respective dates in a date column
-
-    Args:
-        pdf (pyspark.sql.dataframe.DataFrame): Input pyspark sql dataframe.
-        date_var (str): Input date column
-        output_date_var (str): Output column of starting month dates of respective date_var values
-
-    Returns:
-        pyspark.sql.dataframe.DataFrame: The original DataFrame adding the output_date_var
-  """
-  return pdf.withColumn(output_date_var, F.trunc(date_var, "month"))
 
 def get_ratio(pdf: pyspark.sql.dataframe.DataFrame, output_var: str, numerator_var: str, denominator_var: str, replacement_value: float) -> pyspark.sql.dataframe.DataFrame:
 
@@ -254,7 +226,6 @@ def trend_coeff(pdf: pyspark.sql.dataframe.DataFrame, var: str, n: int, key_var:
   pdf = pdf.withColumn(var+'_trend_'+str(n), F.col('x_y_col')/F.col('denom'))
 
   return pdf.drop(*['denom','x_bar_diff','y_col','y_bar','y_bar_diff','x_y_col'])
-
 
 def shape(pdf: pyspark.sql.dataframe.DataFrame) -> str:
   """
