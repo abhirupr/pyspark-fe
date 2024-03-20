@@ -227,31 +227,19 @@ def trend_coeff(pdf: pyspark.sql.dataframe.DataFrame, var: str, n: int, key_var:
 
   return pdf.drop(*['denom','x_bar_diff','y_col','y_bar','y_bar_diff','x_y_col'])
 
-def shape(pdf: pyspark.sql.dataframe.DataFrame) -> str:
+def shape(pdf: pyspark.sql.dataframe.DataFrame, print_shape: bool = True):
   """
   Prints the shape of the pyspark sql dataframe (Number of rows and columns)
 
   Args:
     pdf (pyspark.sql.dataframe.DataFrame): The pyspark input dataframe
+    print (bool): If True prints the shape, else returns a tuple. Default is True
 
   Returns:
     str: The shape of the dataframe
   """
-  print(f"Rows:  {pdf.count()}")
-  print(f"Columns:  {len(pdf.columns)}")
-
-def date_to_month(pdf: pyspark.sql.dataframe.DataFrame, output_month: str, input_date: str) -> pyspark.sql.dataframe.DataFrame:
-
-  """
-  Converts a date column ( in 'YYYY-MM-DD' format) to 'YYYYMM' long format
-
-  Args:
-      pdf (pyspark.sql.dataframe.DataFrame): Input dataframe
-      output_month (str): The output long format column name
-      input_date (str): The input date format column name
-
-  Returns:
-      pyspark.sql.dataframe.DataFrame: The original dataframe with the output_month column added
-
-  """
-  return pdf.withColumn(output_month, F.substring(F.regexp_replace(F.col(input_date), '-', ''),1,6).cast('long'))
+  if print_shape:
+    print(f"Rows:  {pdf.count()}")
+    print(f"Columns:  {len(pdf.columns)}")
+  else:
+    return (pdf.count(), len(pdf.columns))
